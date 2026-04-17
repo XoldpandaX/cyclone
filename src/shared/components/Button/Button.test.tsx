@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { Button } from './Button'
 
-describe('Button', () => {
+describe('button', () => {
   it('renders children', () => {
     render(<Button>Click me</Button>)
     expect(screen.getByRole('button', { name: /click me/i })).toBeInTheDocument()

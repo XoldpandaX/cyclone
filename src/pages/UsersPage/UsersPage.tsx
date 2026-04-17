@@ -1,10 +1,10 @@
-import { useEffect } from 'react'
+import type { User } from '@/shared/types'
 
 import { Stack } from '@mantine/core'
 
+import { useEffect } from 'react'
 import { UsersTable, useUsersStore } from '@/features/users'
 import { Button } from '@/shared/components/Button/Button'
-import type { User } from '@/shared/types'
 
 import styles from './UsersPage.module.scss'
 
@@ -38,9 +38,9 @@ export function UsersPage() {
   }
 
   return (
-    <div className={styles['container']}>
-      <div className={styles['header']}>
-        <h1 className={styles['title']}>Users</h1>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Users</h1>
         <Button onClick={handleAddUser}>Add User</Button>
       </div>
       <Stack gap="md">

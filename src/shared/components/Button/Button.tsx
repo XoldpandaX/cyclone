@@ -7,9 +7,9 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export function Button({ children, className, ...props }: ButtonProps) {
-  const cls = [styles['button'], className].filter(Boolean).join(' ')
+  const cls = [styles.button, className].filter(Boolean).join(' ')
   return (
-    <button className={cls} {...props}>
+    <button type="button" className={cls} {...props}>
       {children}
     </button>
   )

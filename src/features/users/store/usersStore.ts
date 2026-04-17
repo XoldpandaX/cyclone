@@ -1,6 +1,6 @@
-import { create } from 'zustand'
-
 import type { User } from '@/shared/types'
+
+import { create } from 'zustand'
 
 interface UsersState {
   users: User[]
