@@ -1,0 +1,49 @@
+{
+  "name": "cyclone",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "prepare": "cd ../../.. && husky Documents/pet_projects/cyclone/.husky || true"
+  },
+  "dependencies": {
+    "@mantine/core": "^7.17.0",
+    "@mantine/hooks": "^7.17.0",
+    "mantine-datatable": "^7.3.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^3.14.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.1.2",
+    "husky": "^9.1.7",
+    "jiti": "^2.4.2",
+    "jsdom": "^26.0.0",
+    "lint-staged": "^15.4.3",
+    "prettier": "^3.5.3",
+    "sass": "^1.86.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.1",
+    "vitest": "^3.1.1"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
+    "*.{js,jsx,mjs,cjs,json,css,scss,md,html}": ["prettier --write"]
+  }
+}
