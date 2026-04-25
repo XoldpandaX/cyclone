@@ -11,6 +11,7 @@
       "@/*": ["./src/*"]
     },
     "resolveJsonModule": true,
+    "types": ["wicg-file-system-access"],
     "allowImportingTsExtensions": true,
     "strict": true,
     "exactOptionalPropertyTypes": true,

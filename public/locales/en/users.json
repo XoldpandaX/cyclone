@@ -1,0 +1,19 @@
+{
+  "page": {
+    "title": "Users"
+  },
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "actions": "Actions"
+    },
+    "empty": "No users found"
+  },
+  "actions": {
+    "addUser": "Add User",
+    "removeUser": "Remove user"
+  }
+}

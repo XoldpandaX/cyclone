@@ -1,17 +1,64 @@
 import { fileURLToPath, URL } from 'node:url'
 import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig, type UserConfig } from 'vite'
+import checker from 'vite-plugin-checker'
 
-export default defineConfig({
-  plugins: [react()],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+const DEV_PORT = 5173
+
+export default defineConfig(
+  ({ command }): UserConfig => ({
+    plugins: [
+      react(),
+      checker({
+        typescript: true,
+        eslint: {
+          lintCommand: 'eslint . --cache',
+          useFlatConfig: true,
+        },
+      }),
+    ],
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url)),
+      },
     },
-  },
-  css: {
-    modules: {
-      localsConvention: 'camelCase',
+    optimizeDeps: {
+      include: ['react', 'react-dom', '@mantine/core', '@mantine/hooks', 'zustand'],
     },
-  },
-})
+    server: {
+      port: DEV_PORT,
+      strictPort: true,
+      warmup: {
+        clientFiles: ['./src/main.tsx', './src/app/index.tsx', './src/app/app-providers.tsx'],
+      },
+    },
+    preview: {
+      port: DEV_PORT,
+      strictPort: true,
+    },
+    esbuild: {
+      drop: command === 'build' ? ['debugger'] : [],
+    },
+    build: {
+      target: 'esnext',
+      reportCompressedSize: false,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'react-vendor': ['react', 'react-dom'],
+            'mantine-vendor': ['@mantine/core', '@mantine/hooks', 'mantine-datatable'],
+            'state-vendor': ['zustand'],
+          },
+        },
+      },
+    },
+    worker: {
+      format: 'es',
+    },
+    css: {
+      modules: {
+        localsConvention: 'camelCase',
+      },
+    },
+  }),
+)

@@ -1,0 +1,14 @@
+{
+  "actions": {
+    "add": "Add",
+    "remove": "Remove",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "status": {
+    "loading": "Loading..."
+  },
+  "errors": {
+    "generic": "Something went wrong"
+  }
+}
