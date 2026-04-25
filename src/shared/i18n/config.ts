@@ -13,7 +13,7 @@ i18n
     ns: ['common'],
     supportedLngs: ['en', 'uk'],
     backend: {
-      loadPath: '/locales/{{lng}}/{{ns}}.json',
+      loadPath: `${import.meta.env.VITE_BASE_URL}locales/{{lng}}/{{ns}}.json`,
     },
     detection: {
       order: ['localStorage', 'navigator'],
