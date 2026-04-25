@@ -24,7 +24,7 @@ export function DirScannerSelectBtn() {
   return (
     <button type="button" onClick={(): void => handleClick()}>
       {status !== 'needs-permission'
-        ? 'Select music folder'
+        ? 'Choose music folder'
         : 'Give permission to access music folder'}
     </button>
   )
