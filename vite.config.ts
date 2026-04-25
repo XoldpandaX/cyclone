@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { fileURLToPath, URL } from 'node:url'
 import react from '@vitejs/plugin-react'
 import { defineConfig, type UserConfig } from 'vite'
@@ -7,6 +8,7 @@ const DEV_PORT = 5173
 
 export default defineConfig(
   ({ command }): UserConfig => ({
+    base: process.env.VITE_BASE_URL ?? '/',
     plugins: [
       react(),
       checker({
