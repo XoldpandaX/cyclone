@@ -21,14 +21,11 @@ export const runScanUseCase = async ({
   onStatusChange,
 }: IRunScanUseCaseInput): Promise<void> => {
   try {
-    let count: number = 0
+    let totalTracks: number = 0
+    let processedTracks: number = 0
 
     const worker = runScanMusicDirWorker(dir, [], {
       onMessage: async (msg) => {
-        if (['done', 'error'].includes(msg.type)) {
-          onProgressChange({ processed: 0, total: 0, filePath: '', fileName: '' })
-        }
-
         switch (msg.type) {
           case 'total':
             onProgressChange({
@@ -37,24 +34,32 @@ export const runScanUseCase = async ({
               filePath: '',
               fileName: '',
             })
-            count = msg.count
+            totalTracks = msg.count
             break
           case 'progress':
             onProgressChange({
               processed: msg.processed,
-              total: count,
+              total: totalTracks,
               filePath: msg.filePath,
               fileName: msg.fileName,
             })
+            processedTracks = msg.processed
             break
           case 'done':
-            console.warn(`${msg.failed.length} failed tracks`, msg.failed)
             await trackRepository.bulkPut(msg.newRecords)
             worker.terminate()
+            onProgressChange({
+              processed: processedTracks,
+              total: totalTracks,
+              filePath: '',
+              fileName: '',
+            })
             onStatusChange('ready')
+            console.warn(`${msg.failed.length} failed tracks`, msg.failed)
             break
           case 'error':
             worker.terminate()
+            onProgressChange({ processed: 0, total: 0, filePath: '', fileName: '' })
             onStatusChange('error')
             break
           default: {

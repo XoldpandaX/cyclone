@@ -1,0 +1,27 @@
+.c-status-dot {
+  display: inline-block;
+  flex-shrink: 0;
+  border-radius: 50%;
+
+  &--xs {
+    width: 5px;
+    height: 5px;
+  }
+  &--sm {
+    width: 8px;
+    height: 8px;
+  }
+
+  &--green {
+    background-color: var(--mantine-color-green-8);
+  }
+  &--red {
+    background-color: var(--mantine-color-red-8);
+  }
+  &--yellow {
+    background-color: var(--mantine-color-yellow-8);
+  }
+  &--blue {
+    background-color: var(--mantine-color-blue-8);
+  }
+}

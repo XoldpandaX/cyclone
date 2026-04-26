@@ -1,3 +1,4 @@
+import { DirScanProgress } from '@/features/scanner'
 import { LAYOUT_STATUS_BAR_HEIGHT } from './layout-constants'
 
 export const LayoutStatusBar = () => {
@@ -11,7 +12,7 @@ export const LayoutStatusBar = () => {
         fontSize: 12,
       }}
     >
-      status bar
+      <DirScanProgress />
     </div>
   )
 }

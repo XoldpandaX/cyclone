@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAppContext } from '@/app/app-context'
 import { openDir } from '@/shared/lib/fsa'
 
-import { Button } from '@/shared/ui-kit/Button/button'
+import { Button } from '@/shared/ui-kit'
 import styles from './music-page.module.scss'
 
 type Status = 'initializing' | 'no-folder' | 'needs-permission' | 'scanning' | 'ready'

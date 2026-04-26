@@ -14,7 +14,6 @@
     "types": ["wicg-file-system-access"],
     "allowImportingTsExtensions": true,
     "strict": true,
-    "exactOptionalPropertyTypes": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitOverride": true,

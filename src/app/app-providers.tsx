@@ -1,16 +1,13 @@
 import type { ReactNode } from 'react'
+import { UiProvider } from '@/shared/ui-kit'
 
-import { MantineProvider } from '@mantine/core'
-import '@mantine/core/styles.css'
-import 'mantine-datatable/styles.layer.css'
-
-import '@/shared/i18n/config'
-import '@/shared/i18n/types'
+import './i18n/config'
+import './i18n/types'
 
 interface IProvidersProps {
   children: ReactNode
 }
 
 export function AppProviders({ children }: IProvidersProps) {
-  return <MantineProvider>{children}</MantineProvider>
+  return <UiProvider>{children}</UiProvider>
 }

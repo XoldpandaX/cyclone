@@ -10,8 +10,8 @@ i18n
   .init({
     fallbackLng: 'en',
     defaultNS: 'common',
-    ns: ['common'],
-    supportedLngs: ['en', 'uk'],
+    ns: ['common', 'scanner'],
+    supportedLngs: ['en', 'ua', 'ru'],
     backend: {
       loadPath: `${import.meta.env.VITE_BASE_URL}locales/{{lng}}/{{ns}}.json`,
     },

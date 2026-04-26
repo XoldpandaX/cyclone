@@ -1,5 +1,5 @@
 import { useShallow } from 'zustand/react/shallow'
-import { useScanner } from '../model'
+import { useScanner } from '../../model'
 
 export function DirScannerSelectBtn() {
   const { status, selectScanFolder, requestPermission } = useScanner(
