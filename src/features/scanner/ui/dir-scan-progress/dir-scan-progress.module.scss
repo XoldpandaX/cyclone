@@ -1,0 +1,22 @@
+.dirScanProgress {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+}
+
+.dirScanProgressStatus {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dirScanProgressProgressLine {
+  width: 150px;
+  margin-right: 8px;
+}
+
+.dirScanCurrentProcessingFile {
+  max-width: clamp(200px, 40%, 700px);
+  margin-right: auto;
+}

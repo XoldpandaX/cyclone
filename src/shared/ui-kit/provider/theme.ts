@@ -50,5 +50,17 @@ export const theme: MantineThemeOverride = {
       '#0e0f11', // 8 — paper, sidebar
       '#141414', // 9 — darkest surfaces
     ],
+    green: [
+      '#e9fef0',
+      '#d6f9e2',
+      '#acf1c4',
+      '#7ee9a3',
+      '#59e388',
+      '#43df76',
+      '#35dd6c',
+      '#27c45b',
+      '#1db954',
+      '#009741',
+    ],
   },
 }

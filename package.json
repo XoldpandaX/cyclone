@@ -21,6 +21,7 @@
     "@fontsource/sora": "^5.2.8",
     "@mantine/core": "^7.17.0",
     "@mantine/hooks": "^7.17.0",
+    "clsx": "^2.1.1",
     "dexie": "^4.4.2",
     "i18next": "^26.0.5",
     "i18next-browser-languagedetector": "^8.2.1",

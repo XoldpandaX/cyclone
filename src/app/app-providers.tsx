@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
 import { UiProvider } from '@/shared/ui-kit'
 
-import '@/shared/i18n/config'
-import '@/shared/i18n/types'
+import './i18n/config'
+import './i18n/types'
 
 interface IProvidersProps {
   children: ReactNode

@@ -1,0 +1,7 @@
+{
+  "status": {
+    "scanning": "СКАНИРОВАНИЕ"
+  },
+  "processing": "{{file}}",
+  "tracksIndexed": "{{count}} треков проиндексировано"
+}

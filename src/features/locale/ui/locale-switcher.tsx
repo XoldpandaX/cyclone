@@ -3,10 +3,11 @@ import { useTranslation } from 'react-i18next'
 
 const LOCALES = [
   { value: 'en', label: '🇬🇧 English' },
-  { value: 'uk', label: '🇺🇦 Українська' },
+  { value: 'ua', label: '🇺🇦 Українська' },
+  { value: 'ru', label: '🇷🇺 Русский' },
 ]
 
-export function LocaleSwitcher() {
+export const LocaleSwitcher = () => {
   const { i18n } = useTranslation()
 
   const handleChange = (value: string | null) => {

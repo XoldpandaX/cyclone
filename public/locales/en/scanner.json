@@ -1,0 +1,7 @@
+{
+  "status": {
+    "scanning": "SCANNING"
+  },
+  "processing": "{{file}}",
+  "tracksIndexed": "{{count}} Tracks indexed"
+}
