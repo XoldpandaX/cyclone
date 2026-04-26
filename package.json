@@ -17,6 +17,8 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@fontsource/dm-mono": "^5.2.7",
+    "@fontsource/sora": "^5.2.8",
     "@mantine/core": "^7.17.0",
     "@mantine/hooks": "^7.17.0",
     "dexie": "^4.4.2",
