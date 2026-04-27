@@ -17,4 +17,8 @@ export class TrackRepository implements ITrackRepository {
   public async bulkPut(tracks: ITrackRecord[]): Promise<void> {
     await this.tracks.bulkPut(tracks)
   }
+
+  public async clear(): Promise<void> {
+    await this.tracks.clear()
+  }
 }

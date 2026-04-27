@@ -4,7 +4,7 @@ import type { ITrackRepository } from '@/shared/types/repositories/track.ts'
 
 type IInitScanResult =
   | { status: 'processing'; dir: FileSystemDirectoryHandle }
-  | { status: Exclude<ScanStatus, 'processing'> }
+  | { status: Extract<ScanStatus, 'ready' | 'no-folder'> }
 
 export const initScan = async ({
   trackRepository,
@@ -17,17 +17,14 @@ export const initScan = async ({
     const [tracks, dir] = await Promise.all([trackRepository.getAll(), fsHandleRepository.get()])
     const hasTracks = tracks.length > 0
 
-    if (hasTracks) {
+    if (hasTracks && dir) {
       return { status: 'ready' }
     }
 
-    if (dir) {
-      const currPermission = await dir.queryPermission({ mode: 'read' })
-      if (currPermission === 'granted') {
-        return { status: 'processing', dir }
-      }
-
-      return { status: 'needs-permission' }
+    const isDataInconsistent = (hasTracks && !dir) || (dir && !hasTracks)
+    if (isDataInconsistent) {
+      await Promise.all([trackRepository.clear(), fsHandleRepository.clear()])
+      return { status: 'no-folder' }
     }
 
     return { status: 'no-folder' }
