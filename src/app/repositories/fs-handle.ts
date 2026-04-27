@@ -15,4 +15,8 @@ export class FsHandleRepository implements IFsHandleRepository {
   public async put(handle: FileSystemDirectoryHandle): Promise<void> {
     await this.handles.put({ key: MUSIC_FOLDER_KEY, handle })
   }
+
+  public async clear(): Promise<void> {
+    await this.handles.clear()
+  }
 }

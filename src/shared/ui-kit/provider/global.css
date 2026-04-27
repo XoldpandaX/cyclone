@@ -1,0 +1,9 @@
+/*
+  Mantine sets --app-shell-border-color on a compound selector
+  ([data-mantine-color-scheme='dark'] .m_xxxxx) which is more specific
+  than where cssVariablesResolver injects variables. A global rule with
+  matching specificity is the only way to override it without touching dark.4.
+*/
+[data-mantine-color-scheme='dark'] [data-with-border] {
+  --app-shell-border-color: var(--mantine-color-dark-6);
+}

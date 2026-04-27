@@ -1,4 +1,4 @@
-import type { MantineThemeOverride } from '@mantine/core'
+import type { CSSVariablesResolver, MantineThemeOverride } from '@mantine/core'
 
 import '@fontsource/sora/300.css'
 import '@fontsource/sora/400.css'
@@ -64,3 +64,15 @@ export const theme: MantineThemeOverride = {
     ],
   },
 }
+
+export const cssVariablesResolver: CSSVariablesResolver = (t) => ({
+  variables: {},
+  light: {},
+  dark: {
+    // Mantine defaults borders to dark.4 — shift to dark.6 for a subtler look in dark mode
+    '--mantine-color-default-border': t.colors.dark[6],
+    // AppShell ignores --mantine-color-default-border and has its own variable;
+    // overridden here but global.css is also needed due to selector specificity
+    '--app-shell-border-color': t.colors.dark[6],
+  },
+})

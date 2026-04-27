@@ -5,4 +5,5 @@ export interface ITrackRepository {
   getAll: () => Promise<ITrackRecord[]>
   getById: (id: string) => Promise<Optional<ITrackRecord>>
   bulkPut: (tracks: ITrackRecord[]) => Promise<void>
+  clear: () => Promise<void>
 }
