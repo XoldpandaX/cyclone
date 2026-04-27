@@ -61,6 +61,11 @@ export default defineConfig(
       modules: {
         localsConvention: 'camelCase',
       },
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@use '/src/shared/ui-kit/_vars.scss' as *;`,
+        },
+      },
     },
   }),
 )
