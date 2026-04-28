@@ -13,7 +13,7 @@ export class AppDb extends Dexie {
   public constructor() {
     super('cyclone-db')
     this.version(1).stores({
-      tracks: 'id',
+      tracks: 'id, artist, albumArtist',
       handles: 'key',
     })
   }

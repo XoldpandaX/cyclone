@@ -7,6 +7,7 @@ export interface ITrackRecord {
   mimeType: string
   no: Nullable<number>
   album: Nullable<string>
+  albumArtist: Nullable<string>
   artist: Nullable<string>
   title: Nullable<string>
   year: Nullable<number>

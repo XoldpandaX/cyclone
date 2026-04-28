@@ -1,3 +1,4 @@
+import type { Optional } from '@/shared/types/maybe'
 import type { ITrackRecord } from '@/shared/types/record'
 import { withConcurrency } from '@/shared/lib/concurency'
 import { uuid } from '@/shared/lib/crypto'
@@ -23,9 +24,7 @@ const ctx = globalThis as unknown as {
   postMessage: (data: ScannerMessage) => void
   addEventListener: (
     type: 'message',
-    listener: (
-      e: MessageEvent<{ root: FileSystemDirectoryHandle; existingTracks: ITrackRecord[] }>,
-    ) => void,
+    listener: (e: MessageEvent<{ root: FileSystemDirectoryHandle; existingTracks: ITrackRecord[] }>) => void,
   ) => void
 }
 
@@ -34,12 +33,6 @@ ctx.addEventListener(
   async (e: MessageEvent<{ root: FileSystemDirectoryHandle; existingTracks: ITrackRecord[] }>) => {
     try {
       const startedAt = performance.now()
-      const entries = await collectFileEntries(e.data.root)
-
-      ctx.postMessage({ type: 'total', count: entries.length } satisfies ScannerMessage)
-
-      const tracksMap = new Map(e.data.existingTracks.map((r) => [r.id, r]))
-
       const newRecords: ITrackRecord[] = []
       const allRecords: ITrackRecord[] = []
       const failedRecords: Array<{ id: string; error: string }> = []
@@ -47,38 +40,30 @@ ctx.addEventListener(
 
       // Concurrency of 400 is empirically fastest with p-limit + 256KB slicing — tested 100/200/400.
       // p-limit's queue handles higher concurrency better than the custom worker-loop (100 = 3.66s, 400 = 3.15s).
-      await withConcurrency(entries, 400, async ({ fileHandle, pathSegments }): Promise<void> => {
+      await withConcurrency(walkFileEntries(e.data.root), 400, async ({ fileHandle, pathSegments }): Promise<void> => {
         const id = uuid()
-        let trackRecord = tracksMap.get(id)
+        let trackRecord: Optional<ITrackRecord>
 
-        if (!trackRecord) {
-          try {
-            const file = await fileHandle.getFile()
-            let audioMetadata = await tryParseAudio(file.slice(0, 256 * 1024), file.type)
-            if (!audioMetadata.common.title && !audioMetadata.common.artist) {
-              audioMetadata = await tryParseAudio(file, file.type)
-            }
-
-            trackRecord = createTrackRecord(
-              id,
-              fileHandle.name,
-              pathSegments,
-              file.type,
-              audioMetadata,
-            )
-            newRecords.push(trackRecord)
-          } catch (err) {
-            const error = String(err)
-            failedRecords.push({ id, error })
-            console.error(`Failed to parse track "${id}":`, err)
-            ctx.postMessage({
-              type: 'progress',
-              processed: ++processed,
-              filePath: pathSegments.join('/'),
-              fileName: fileHandle.name,
-            } satisfies ScannerMessage)
-            return
+        try {
+          const file = await fileHandle.getFile()
+          let audioMetadata = await tryParseAudio(file.slice(0, 256 * 1024), file.type)
+          if (!audioMetadata.common.title && !audioMetadata.common.artist && !audioMetadata.common.album) {
+            audioMetadata = await tryParseAudio(file, file.type)
           }
+
+          trackRecord = createTrackRecord(id, fileHandle.name, pathSegments, file.type, audioMetadata)
+          newRecords.push(trackRecord)
+        } catch (err) {
+          const error = String(err)
+          failedRecords.push({ id, error })
+          console.error(`Failed to parse track "${id}":`, err)
+          ctx.postMessage({
+            type: 'progress',
+            processed: ++processed,
+            filePath: pathSegments.join('/'),
+            fileName: fileHandle.name,
+          } satisfies ScannerMessage)
+          return
         }
 
         allRecords.push(trackRecord)
@@ -97,7 +82,7 @@ ctx.addEventListener(
       ctx.postMessage({
         type: 'done',
         records: allRecords,
-        newRecords,
+        newRecords: resolveAlbumArtists(newRecords),
         failed: failedRecords,
       } satisfies ScannerMessage)
     } catch (err) {
@@ -106,24 +91,49 @@ ctx.addEventListener(
   },
 )
 
-async function collectFileEntries(
-  dir: FileSystemDirectoryHandle,
-  pathSegments: string[] = [],
-): Promise<IFileEntry[]> {
-  const files: IFileEntry[] = []
-  const subdirs: FileSystemDirectoryHandle[] = []
+function resolveAlbumArtists(tracks: ITrackRecord[]): ITrackRecord[] {
+  const unknownAlbum = 'Unknown Album'
+  const variousArtists = 'Various artists'
 
-  for await (const entry of dir.values()) {
-    if (entry.kind === 'file' && isAudio(entry.name)) {
-      files.push({ fileHandle: entry, pathSegments })
-    } else if (entry.kind === 'directory') {
-      subdirs.push(entry)
+  const tracksGroupedByAlbum: Map<string, ITrackRecord[]> = new Map()
+  for (const track of tracks) {
+    const trackAlbum = track.album ?? unknownAlbum
+
+    if (!tracksGroupedByAlbum.has(trackAlbum)) {
+      tracksGroupedByAlbum.set(trackAlbum, [])
+    }
+
+    const album = tracksGroupedByAlbum.get(trackAlbum)
+    if (album) {
+      album.push(track)
     }
   }
 
-  const nested = await Promise.all(
-    subdirs.map((sub) => collectFileEntries(sub, [...pathSegments, sub.name])),
-  )
+  for (const [albumName, albumTracks] of tracksGroupedByAlbum) {
+    const hasUniqArtist = [...new Set(albumTracks.map(({ artist }) => artist))].length === 1
+    tracksGroupedByAlbum.set(
+      albumName,
+      albumTracks.map((track) => ({ ...track, albumArtist: !hasUniqArtist ? variousArtists : track.artist })),
+    )
+  }
 
-  return files.concat(...nested)
+  const result: ITrackRecord[] = []
+  for (const tracks of tracksGroupedByAlbum.values()) {
+    result.push(...tracks)
+  }
+
+  return result
+}
+
+// Generator approach — lazy traversal, bounded memory regardless of library size (see https://github.com/whatwg/fs/issues/184).
+// At any moment only ~concurrency (400) handles are alive. Does not support percentage progress
+// since total is unknown upfront.
+async function* walkFileEntries(dir: FileSystemDirectoryHandle, pathSegments: string[] = []): AsyncGenerator<IFileEntry> {
+  for await (const entry of dir.values()) {
+    if (entry.kind === 'file' && isAudio(entry.name)) {
+      yield { fileHandle: entry, pathSegments }
+    } else if (entry.kind === 'directory') {
+      yield* walkFileEntries(entry, [...pathSegments, entry.name])
+    }
+  }
 }
