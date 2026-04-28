@@ -5,12 +5,7 @@ import type { ITrackRepository } from '@/shared/types/repositories/track.ts'
 interface IRunScanUseCaseInput {
   dir: FileSystemDirectoryHandle
   trackRepository: ITrackRepository
-  onProgressChange: (progress: {
-    processed: number
-    total: number
-    filePath: string
-    fileName: string
-  }) => void
+  onProgressChange: (progress: { processed: number; total: number; filePath: string; fileName: string }) => void
   onStatusChange: (status: 'ready' | 'error') => void
 }
 
@@ -46,8 +41,8 @@ export const runScanUseCase = async ({
             processedTracks = msg.processed
             break
           case 'done':
-            await trackRepository.bulkPut(msg.newRecords)
             worker.terminate()
+            await trackRepository.bulkPut(msg.newRecords)
             onProgressChange({
               processed: processedTracks,
               total: totalTracks,

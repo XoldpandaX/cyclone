@@ -16,6 +16,7 @@ const createTrackRecord = (
     mimeType,
     no: common.track.no,
     artist: orNull(common.artist),
+    albumArtist: null,
     title: orNull(common.title),
     album: orNull(common.album),
     year: orNull(common.year),

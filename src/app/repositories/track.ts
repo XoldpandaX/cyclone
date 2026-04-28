@@ -10,6 +10,11 @@ export class TrackRepository implements ITrackRepository {
     return this.tracks.toArray()
   }
 
+  public async getArtists(): Promise<string[]> {
+    const albumArtists = await this.tracks.orderBy('albumArtist').uniqueKeys()
+    return albumArtists.filter((k): k is string => k !== null)
+  }
+
   public getById(id: string): Promise<Optional<ITrackRecord>> {
     return this.tracks.get(id)
   }
