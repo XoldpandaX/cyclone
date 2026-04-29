@@ -23,7 +23,6 @@ export type ScanStatus =
   | 'error'
 
 export interface IScanProgress {
-  total: number
   processed: number
   filePath: string
   fileName: string

@@ -5,7 +5,7 @@ import type { ITrackRepository } from '@/shared/types/repositories/track.ts'
 interface IRunScanUseCaseInput {
   dir: FileSystemDirectoryHandle
   trackRepository: ITrackRepository
-  onProgressChange: (progress: { processed: number; total: number; filePath: string; fileName: string }) => void
+  onProgressChange: (progress: { processed: number; filePath: string; fileName: string }) => void
   onStatusChange: (status: 'ready' | 'error') => void
 }
 
@@ -16,25 +16,14 @@ export const runScanUseCase = async ({
   onStatusChange,
 }: IRunScanUseCaseInput): Promise<void> => {
   try {
-    let totalTracks: number = 0
     let processedTracks: number = 0
 
     const worker = runScanMusicDirWorker(dir, [], {
       onMessage: async (msg) => {
         switch (msg.type) {
-          case 'total':
-            onProgressChange({
-              processed: 0,
-              total: msg.count,
-              filePath: '',
-              fileName: '',
-            })
-            totalTracks = msg.count
-            break
           case 'progress':
             onProgressChange({
               processed: msg.processed,
-              total: totalTracks,
               filePath: msg.filePath,
               fileName: msg.fileName,
             })
@@ -45,7 +34,6 @@ export const runScanUseCase = async ({
             await trackRepository.bulkPut(msg.newRecords)
             onProgressChange({
               processed: processedTracks,
-              total: totalTracks,
               filePath: '',
               fileName: '',
             })
@@ -54,7 +42,7 @@ export const runScanUseCase = async ({
             break
           case 'error':
             worker.terminate()
-            onProgressChange({ processed: 0, total: 0, filePath: '', fileName: '' })
+            onProgressChange({ processed: 0, filePath: '', fileName: '' })
             onStatusChange('error')
             break
           default: {

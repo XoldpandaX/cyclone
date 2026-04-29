@@ -10,7 +10,6 @@ interface IFileEntry {
 }
 
 export type ScannerMessage =
-  | { type: 'total'; count: number }
   | { type: 'progress'; filePath: string; fileName: string; processed: number }
   | {
       type: 'done'
