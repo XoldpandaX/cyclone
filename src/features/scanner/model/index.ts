@@ -3,7 +3,6 @@ import { useScannerStore } from './scanner-store'
 import {
   selectProcessedFilesTotal,
   selectProcessingFile,
-  selectProgressPercentage,
   selectRequestPermission,
   selectSelectScanFolder,
   selectStatus,
@@ -11,7 +10,6 @@ import {
 
 interface IScannerPublicApi {
   status: ScanStatus
-  progressPercentage: number
   processedFilesTotal: number
   processingFile: string
   selectScanFolder: () => void
@@ -21,7 +19,6 @@ interface IScannerPublicApi {
 function toPublicApi(s: IScannerState): IScannerPublicApi {
   return {
     status: selectStatus(s),
-    progressPercentage: selectProgressPercentage(s),
     processedFilesTotal: selectProcessedFilesTotal(s),
     processingFile: selectProcessingFile(s),
     selectScanFolder: selectSelectScanFolder(s),
