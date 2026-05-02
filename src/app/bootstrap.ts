@@ -1,27 +1,28 @@
 import type { IFsHandleRepository } from '@/shared/types/repositories/fs-handle'
-import type { ITrackRepository } from '@/shared/types/repositories/track'
+import type { ILibraryRepository } from '@/shared/types/repositories/library'
 import { AppDb } from '@/app/db'
 import { FsHandleRepository } from '@/app/repositories/fs-handle'
-import { TrackRepository } from '@/app/repositories/track'
+import { LibraryRepository } from '@/app/repositories/library.ts'
 import { initScanner } from '@/features/scanner'
 
 export interface IBootstrap {
-  trackRepository: ITrackRepository
+  libraryRepository: ILibraryRepository
   fsHandleRepository: IFsHandleRepository
 }
 
 export const bootstrap = async (): Promise<IBootstrap> => {
   const db = new AppDb()
-  const trackRepository = new TrackRepository(db.tracks)
-  const fsHandleRepository = new FsHandleRepository(db.handles)
+  await db.open()
+  const libraryRepository = new LibraryRepository(db)
+  const fsHandleRepository = new FsHandleRepository(db)
 
   await initScanner({
-    trackRepository,
+    libraryRepository,
     fsHandleRepository,
   })
 
   return {
-    trackRepository,
+    libraryRepository,
     fsHandleRepository,
   }
 }
