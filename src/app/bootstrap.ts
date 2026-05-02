@@ -14,6 +14,7 @@ export interface IBootstrap {
 export const bootstrap = async (): Promise<IBootstrap> => {
   const db = new AppDb()
   await db.open()
+
   const libraryRepository = new LibraryRepository(db)
   const fsHandleRepository = new FsHandleRepository(db)
 

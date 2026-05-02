@@ -2,6 +2,9 @@ import type { Nullable } from '@/shared/types/maybe'
 import type { IAlbumRecord, IArtistRecord, ITrackRecord } from '@/shared/types/record'
 import type { ILibraryRepository } from '@/shared/types/repositories/library'
 import { createStore, type StoreApi, useStore } from 'zustand'
+import { getAlbumsByArtistIdUseCase } from '../use-case/get-albums'
+import { getArtistsUseCase } from '../use-case/get-artists'
+import { getTracksByAlbumIdIdUseCase } from '../use-case/get-tracks.ts'
 
 type ArtistId = string
 type AlbumId = string
@@ -35,7 +38,7 @@ const store: StoreApi<ILibraryState> = createStore<ILibraryState>()((set) => ({
   tracks: null,
   getArtists: async (): Promise<void> => {
     try {
-      const artists = await getParams().libraryRepository.getArtists()
+      const artists = await getArtistsUseCase(getParams().libraryRepository)
       set({ artists })
     } catch (e) {
       console.error(e)
@@ -43,7 +46,7 @@ const store: StoreApi<ILibraryState> = createStore<ILibraryState>()((set) => ({
   },
   getAlbumsByArtistId: async (artistId: string): Promise<void> => {
     try {
-      const albums = await getParams().libraryRepository.getAlbumsByArtistId(artistId)
+      const albums = await getAlbumsByArtistIdUseCase(artistId, { libraryRepository: getParams().libraryRepository })
       set((state) => ({
         albums: {
           ...(state.albums ?? {}),
@@ -56,7 +59,7 @@ const store: StoreApi<ILibraryState> = createStore<ILibraryState>()((set) => ({
   },
   getTracksByAlbumId: async (albumId: string): Promise<void> => {
     try {
-      const tracks = await getParams().libraryRepository.getTracksByAlbumId(albumId)
+      const tracks = await getTracksByAlbumIdIdUseCase(albumId, { libraryRepository: getParams().libraryRepository })
       set((state) => ({
         tracks: {
           ...(state.tracks ?? {}),
