@@ -25,7 +25,7 @@ export default defineConfig(
       },
     },
     optimizeDeps: {
-      include: ['react', 'react-dom', '@mantine/core', '@mantine/hooks', 'zustand'],
+      include: ['react', 'react-dom', '@mantine/core', '@mantine/hooks', 'zustand', 'reselect', 'dexie'],
     },
     server: {
       port: DEV_PORT,
@@ -49,7 +49,10 @@ export default defineConfig(
           manualChunks: {
             'react-vendor': ['react', 'react-dom'],
             'mantine-vendor': ['@mantine/core', '@mantine/hooks', 'mantine-datatable'],
-            'state-vendor': ['zustand'],
+            'i18n-vendor': ['i18next', 'i18next-browser-languagedetector', 'i18next-http-backend'],
+            'state-vendor': ['zustand', 'reselect'],
+            'db-vendor': ['dexie'],
+            'audio-vendor': ['music-metadata'],
           },
         },
       },
