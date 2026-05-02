@@ -1,5 +1,5 @@
 import type { IFsHandleRepository } from '@/shared/types/repositories/fs-handle'
-import type { ITrackRepository } from '@/shared/types/repositories/track'
+import type { ILibraryRepository } from '@/shared/types/repositories/library'
 import { createStore, type StoreApi, useStore } from 'zustand'
 import { initScan } from '../use-case/init-scan'
 import { openScanFolder } from '../use-case/open-scan-folder'
@@ -38,7 +38,7 @@ export interface IScannerState {
 }
 
 interface IScannerInitParams {
-  trackRepository: ITrackRepository
+  libraryRepository: ILibraryRepository
   fsHandleRepository: IFsHandleRepository
 }
 
@@ -105,7 +105,7 @@ const store: StoreApi<IScannerState> = createStore<IScannerState>()((set, get) =
       set({ status: 'processing' })
       runScanUseCase({
         dir,
-        trackRepository: getParams().trackRepository,
+        libraryRepository: getParams().libraryRepository,
         onProgressChange,
         onStatusChange,
       })
