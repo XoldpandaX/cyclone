@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { CompatibilityGate } from '@/features/compatibility'
 import { AppContext } from './app-context'
 import { AppProviders } from './app-providers'
 import { bootstrap, type IBootstrap } from './bootstrap'
@@ -17,7 +18,9 @@ export function App() {
         <p>Loading...</p>
       ) : (
         <AppContext value={ctx}>
-          <Layout />
+          <CompatibilityGate>
+            <Layout />
+          </CompatibilityGate>
         </AppContext>
       )}
     </AppProviders>
