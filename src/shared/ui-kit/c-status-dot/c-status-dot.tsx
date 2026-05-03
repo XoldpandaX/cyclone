@@ -8,13 +8,13 @@ import styles from './c-status-dot.module.scss'
 
 type CStatusDotSize = Extract<MantineSize, 'xs' | 'sm'>
 
-export interface ICStatusDot {
+export interface ICStatusDotProps {
   color: ServiceColor
   size?: CStatusDotSize
   active?: boolean
 }
 
-export const CStatusDot: FC<ICStatusDot> = ({ color, size = 'xs', active }) => {
+export const CStatusDot: FC<ICStatusDotProps> = ({ color, size = 'xs', active }) => {
   return (
     <div
       className={clsx(

@@ -3,6 +3,9 @@ import { type FC, useEffectEvent } from 'react'
 import { useEffect } from 'react'
 import { LibraryTree, useLibrary } from '@/features/library'
 import { useScanner } from '@/features/scanner'
+import { CScrollArea } from '@/shared/ui-kit'
+
+import styles from './layout-sidebar.module.scss'
 
 export const LayoutSidebar: FC = () => {
   const scannerStatus = useScanner((s) => s.status)
@@ -19,8 +22,10 @@ export const LayoutSidebar: FC = () => {
   }, [scannerStatus])
 
   return (
-    <AppShell.Navbar p="sm">
-      <LibraryTree />
+    <AppShell.Navbar className={styles.layoutSidebar}>
+      <AppShell.Section grow my="md" component={CScrollArea}>
+        <LibraryTree />
+      </AppShell.Section>
     </AppShell.Navbar>
   )
 }
