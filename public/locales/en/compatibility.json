@@ -1,0 +1,5 @@
+{
+  "title": "Browser not supported",
+  "mobile": "Cyclone is not supported on mobile devices. Please open it on a desktop browser such as Chrome or Edge.",
+  "desktop": "Cyclone requires the File System Access API. Please use a Chromium-based browser such as Chrome or Edge."
+}
