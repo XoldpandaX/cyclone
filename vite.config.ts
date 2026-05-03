@@ -27,9 +27,11 @@ export default defineConfig(
     optimizeDeps: {
       include: ['react', 'react-dom', '@mantine/core', '@mantine/hooks', 'zustand', 'reselect', 'dexie'],
     },
+    clearScreen: true,
     server: {
       port: DEV_PORT,
       strictPort: true,
+      open: true,
       warmup: {
         clientFiles: ['./src/main.tsx', './src/app/index.tsx', './src/app/app-providers.tsx'],
       },
