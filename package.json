@@ -31,6 +31,7 @@
     "jsx": "^0.9.89",
     "mantine-datatable": "^7.3.3",
     "music-metadata": "^11.12.3",
+    "nanoevents": "^9.1.0",
     "p-limit": "^7.3.0",
     "plop": "^4.0.5",
     "react": "^19.0.0",
