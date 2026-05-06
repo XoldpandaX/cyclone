@@ -53,7 +53,7 @@ export default defineConfig(
             'react-vendor': ['react', 'react-dom'],
             'mantine-vendor': ['@mantine/core', '@mantine/hooks', 'mantine-datatable'],
             'i18n-vendor': ['i18next', 'i18next-browser-languagedetector', 'i18next-http-backend'],
-            'state-vendor': ['zustand', 'reselect'],
+            'state-vendor': ['zustand', 'reselect', 'immer'],
             'db-vendor': ['dexie'],
             'audio-vendor': ['music-metadata'],
           },
