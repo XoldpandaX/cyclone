@@ -1,6 +1,6 @@
-import type { Nullable } from '@/shared/types/maybe'
 import type { IAlbumRecord, IArtistRecord, ITrackRecord } from '@/shared/types/record'
 import type { ILibraryRepository } from '@/shared/types/repositories/library'
+import { produce } from 'immer'
 import { createStore, type StoreApi, useStore } from 'zustand'
 import { getAlbumsByArtistIdUseCase } from '../use-case/get-albums'
 import { getArtistsUseCase } from '../use-case/get-artists'
@@ -11,8 +11,8 @@ type AlbumId = string
 
 export interface ILibraryState {
   artists: IArtistRecord[]
-  albums: Nullable<Record<ArtistId, IAlbumRecord[]>>
-  tracks: Nullable<Record<AlbumId, ITrackRecord[]>>
+  albums: Record<ArtistId, IAlbumRecord[]>
+  tracks: Record<AlbumId, ITrackRecord[]>
   getArtists: () => Promise<void>
   getAlbumsByArtistId: (artistId: string) => void
   getTracksByAlbumId: (albumId: string) => void
@@ -34,8 +34,8 @@ if (import.meta.hot) {
 
 const store: StoreApi<ILibraryState> = createStore<ILibraryState>()((set) => ({
   artists: [],
-  albums: null,
-  tracks: null,
+  albums: {},
+  tracks: {},
   getArtists: async (): Promise<void> => {
     try {
       const artists = await getArtistsUseCase(getParams().libraryRepository)
@@ -47,12 +47,12 @@ const store: StoreApi<ILibraryState> = createStore<ILibraryState>()((set) => ({
   getAlbumsByArtistId: async (artistId: string): Promise<void> => {
     try {
       const albums = await getAlbumsByArtistIdUseCase(artistId, { libraryRepository: getParams().libraryRepository })
-      set((state) => ({
-        albums: {
-          ...(state.albums ?? {}),
-          [artistId]: albums,
-        },
-      }))
+
+      set(
+        produce((state: ILibraryState) => {
+          state.albums[artistId] = albums
+        }),
+      )
     } catch (e) {
       console.error(e)
     }
@@ -60,12 +60,12 @@ const store: StoreApi<ILibraryState> = createStore<ILibraryState>()((set) => ({
   getTracksByAlbumId: async (albumId: string): Promise<void> => {
     try {
       const tracks = await getTracksByAlbumIdIdUseCase(albumId, { libraryRepository: getParams().libraryRepository })
-      set((state) => ({
-        tracks: {
-          ...(state.tracks ?? {}),
-          [albumId]: tracks,
-        },
-      }))
+
+      set(
+        produce((state: ILibraryState) => {
+          state.tracks[albumId] = tracks
+        }),
+      )
     } catch (e) {
       console.error(e)
     }
