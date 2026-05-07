@@ -1,0 +1,44 @@
+import { createStore, type StoreApi, useStore } from 'zustand'
+import { run{{pascalCase name}}CheckUseCase } from '../use-case/run-{{kebabCase name}}-check'
+
+export interface I{{pascalCase name}}State {
+  check: string
+  runCheck: () => Promise<void>
+}
+
+interface I{{pascalCase name}}InitParams {}
+
+// HMR resets module-level variables — preserve initParams across reloads so
+// init{{pascalCase name}}() doesn't need to be called again after a hot update
+let initParams: I{{pascalCase name}}InitParams | null = import.meta.hot?.data.initParams ?? null
+if (import.meta.hot) {
+  import.meta.hot.accept()
+  import.meta.hot.dispose((data) => {
+    data.initParams = initParams
+  })
+}
+
+const store: StoreApi<I{{pascalCase name}}State> = createStore<I{{pascalCase name}}State>()((set) => ({
+  check: 'hello world',
+  runCheck: async (): Promise<void> => {
+    // use getParams() to access repositories/services
+    const result = await run{{pascalCase name}}CheckUseCase()
+    set({ check: result })
+  },
+}))
+
+function getParams(): I{{pascalCase name}}InitParams {
+  if (!initParams) {
+    throw new Error('{{pascalCase name}} module not initialized. Call init{{pascalCase name}}() in bootstrap.')
+  }
+
+  return initParams
+}
+
+export const init{{pascalCase name}} = async (params: I{{pascalCase name}}InitParams): Promise<void> => {
+  initParams = params
+}
+
+export function use{{pascalCase name}}Store<T>(selector: (s: I{{pascalCase name}}State) => T): T {
+  return useStore(store, selector)
+}

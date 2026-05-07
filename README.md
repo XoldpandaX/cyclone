@@ -4,19 +4,19 @@ A production-ready React application scaffold built with modern tooling and stri
 
 ## Tech Stack
 
-| Layer | Tool |
-|---|---|
-| UI Framework | React 19 |
-| Language | TypeScript 5 (strict) |
-| Bundler | Vite 6 |
-| State | Zustand 5 |
-| Component Library | Mantine 7 |
-| Data Grid | Mantine DataTable 7 |
-| Styling | Sass + CSS Modules |
-| Linting | ESLint 9 (flat config, `@antfu/eslint-config`) |
-| Formatting | Prettier 3 |
-| Testing | Vitest 3 + Testing Library |
-| Git Hooks | Husky 9 + lint-staged |
+| Layer             | Tool                                           |
+| ----------------- | ---------------------------------------------- |
+| UI Framework      | React 19                                       |
+| Language          | TypeScript 5 (strict)                          |
+| Bundler           | Vite 6                                         |
+| State             | Zustand 5                                      |
+| Component Library | Mantine 7                                      |
+| Data Grid         | Mantine DataTable 7                            |
+| Styling           | Sass + CSS Modules                             |
+| Linting           | ESLint 9 (flat config, `@antfu/eslint-config`) |
+| Formatting        | Prettier 3                                     |
+| Testing           | Vitest 3 + Testing Library                     |
+| Git Hooks         | Husky 9 + lint-staged                          |
 
 ## Requirements
 
@@ -38,16 +38,45 @@ npm run dev
 
 ## Available Scripts
 
-| Script | Description |
-|---|---|
-| `npm run dev` | Start Vite dev server with HMR |
-| `npm run build` | Type-check then build for production |
-| `npm run preview` | Preview the production build locally |
-| `npm run lint` | Run ESLint across the project |
-| `npm run lint:fix` | Run ESLint with auto-fix |
-| `npm run format` | Format all files with Prettier |
-| `npm run test` | Run Vitest in watch mode |
-| `npm run test:run` | Run Vitest once (CI mode) |
+| Script             | Description                          |
+| ------------------ | ------------------------------------ |
+| `npm run dev`      | Start Vite dev server with HMR       |
+| `npm run build`    | Type-check then build for production |
+| `npm run preview`  | Preview the production build locally |
+| `npm run lint`     | Run ESLint across the project        |
+| `npm run lint:fix` | Run ESLint with auto-fix             |
+| `npm run format`   | Format all files with Prettier       |
+| `npm run test`     | Run Vitest in watch mode             |
+| `npm run test:run` | Run Vitest once (CI mode)            |
+| `npm run generate` | Scaffold a new feature module        |
+
+## Code Generation
+
+The project uses [Plop](https://plopjs.com) to scaffold new feature modules.
+
+```bash
+npm run generate
+```
+
+You will be prompted for a feature name (e.g. `my-feature`). This generates:
+
+```
+src/features/my-feature/
+├── index.ts                              # barrel export (add UI exports here)
+├── model/
+│   ├── index.ts                          # public API — useMyFeature() hook
+│   ├── my-feature-store.ts               # Zustand store with HMR + initMyFeature()
+│   └── my-feature-store-selectors.ts     # selectors (empty, ready to fill)
+├── ui/                                   # add your React components here
+└── use-case/                             # add business logic here
+```
+
+After generating:
+
+1. Add state and actions to `my-feature-store.ts`
+2. Expose them via `toPublicApi` in `model/index.ts`
+3. Add use cases under `use-case/`
+4. Wire `initMyFeature()` in `src/app/bootstrap.ts`
 
 ## Project Structure
 

@@ -1,0 +1,14 @@
+import type { FC } from 'react'
+import { use{{pascalCase name}} } from '../../model'
+
+export const {{pascalCase name}}: FC = () => {
+  const check = use{{pascalCase name}}((s) => s.check)
+  const runCheck = use{{pascalCase name}}((s) => s.runCheck)
+
+  return (
+    <div>
+      <p>{check}</p>
+      <button onClick={() => { void runCheck() }}>Run check</button>
+    </div>
+  )
+}
