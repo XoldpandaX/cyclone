@@ -1,4 +1,5 @@
 import type { AudioEngineEvents, IAudioEngine } from '../../types/services/audio-engine'
+import { clamp } from '../math'
 import EventEmitter from './event-emitter'
 
 export default class AudioEngine extends EventEmitter<AudioEngineEvents> implements IAudioEngine {
@@ -9,8 +10,8 @@ export default class AudioEngine extends EventEmitter<AudioEngineEvents> impleme
   // Data
   private _audioBuffer: AudioBuffer | null = null
   private _source: AudioBufferSourceNode | null = null
-  private _offset = 0 // текущая позиция (сек)
-  private _startedAt = 0 // когда начали играть (ctx.currentTime)
+  private _offset = 0 // current playback position in seconds
+  private _startedAt = 0 // context time at playback start
 
   // State
   private _playing = false
@@ -21,7 +22,6 @@ export default class AudioEngine extends EventEmitter<AudioEngineEvents> impleme
   }
 
   public async load(buffer: ArrayBuffer): Promise<void> {
-    // TODO: unload and load new track when _playing === true
     try {
       this._audioBuffer = await this._ctx.decodeAudioData(buffer)
     } catch (e) {
@@ -33,8 +33,7 @@ export default class AudioEngine extends EventEmitter<AudioEngineEvents> impleme
     }
   }
 
-  // ---- PLAY ----
-  play(): void {
+  public play(): void {
     if (!this._audioBuffer) return
     if (this._playing) return
 
@@ -43,8 +42,19 @@ export default class AudioEngine extends EventEmitter<AudioEngineEvents> impleme
     this.startTick()
   }
 
-  // ---- PAUSE ----
-  pause(): void {
+  public seek(playbackPosition: number): void {
+    if (!this._audioBuffer) return
+    if (playbackPosition < 0 || playbackPosition > this._audioBuffer.duration) return
+
+    const wasPlaying = this._playing
+
+    this.pause()
+    this._offset = playbackPosition
+
+    if (wasPlaying) this.play()
+  }
+
+  public pause(): void {
     if (!this._playing) return
 
     this._source?.stop()
@@ -52,9 +62,17 @@ export default class AudioEngine extends EventEmitter<AudioEngineEvents> impleme
     this._offset = this.calcOffset()
     this._playing = false
     this.stopTick()
+    this.emit('pause')
   }
 
-  // ---- STOP ----
+  public setVolume(percent: number): void {
+    const newVolume = clamp(percent / 100, { min: 0, max: 1 })
+    const currentVolume = this._gain.gain.value
+    if (newVolume === currentVolume) return
+
+    this._gain.gain.setValueAtTime(newVolume, this._ctx.currentTime)
+  }
+
   private stop(): void {
     this._source?.stop()
     this._source = null
@@ -71,10 +89,12 @@ export default class AudioEngine extends EventEmitter<AudioEngineEvents> impleme
     src.buffer = this._audioBuffer
     src.connect(this._gain)
 
+    // onended fires on both natural end and manual stop() — src identity check
+    // prevents seek/pause from triggering stop() on the newly created source
     src.onended = () => {
-      // важно: чтобы не сбивалось при seek/pause
-      if (this._playing) {
+      if (this._playing && this._source === src) {
         this.stop()
+        this.emit('stop')
       }
     }
 
@@ -94,8 +114,7 @@ export default class AudioEngine extends EventEmitter<AudioEngineEvents> impleme
 
   private startTick(): void {
     this._tickId = setInterval(() => {
-      const time = this.calcOffset()
-      this.emit('onTimeUpdate', time)
+      this.emit('timeUpdate', this.calcOffset())
     }, 100)
   }
 
