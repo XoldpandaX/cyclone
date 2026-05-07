@@ -14,7 +14,8 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
-    "prepare": "husky"
+    "prepare": "husky",
+    "generate": "plop --plopfile plopfile.ts"
   },
   "dependencies": {
     "@fontsource/dm-mono": "^5.2.7",
@@ -27,9 +28,11 @@
     "i18next-browser-languagedetector": "^8.2.1",
     "i18next-http-backend": "^3.0.4",
     "immer": "^11.1.6",
+    "jsx": "^0.9.89",
     "mantine-datatable": "^7.3.3",
     "music-metadata": "^11.12.3",
     "p-limit": "^7.3.0",
+    "plop": "^4.0.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-i18next": "^17.0.4",

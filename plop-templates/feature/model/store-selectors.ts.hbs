@@ -1,0 +1,5 @@
+import type { I{{pascalCase name}}State } from './{{kebabCase name}}-store'
+
+export const selectCheck = (s: I{{pascalCase name}}State): string => s.check
+
+export const selectRunCheck = (s: I{{pascalCase name}}State): (() => Promise<void>) => s.runCheck

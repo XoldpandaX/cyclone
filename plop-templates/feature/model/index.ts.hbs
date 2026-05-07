@@ -1,0 +1,21 @@
+import type { I{{pascalCase name}}State } from './{{kebabCase name}}-store'
+import { use{{pascalCase name}}Store } from './{{kebabCase name}}-store'
+import { selectCheck, selectRunCheck } from './{{kebabCase name}}-store-selectors'
+
+interface I{{pascalCase name}}PublicApi {
+  check: string
+  runCheck: () => Promise<void>
+}
+
+function toPublicApi(s: I{{pascalCase name}}State): I{{pascalCase name}}PublicApi {
+  return {
+    check: selectCheck(s),
+    runCheck: selectRunCheck(s),
+  }
+}
+
+export { init{{pascalCase name}} } from './{{kebabCase name}}-store'
+
+export function use{{pascalCase name}}<T>(selector: (s: I{{pascalCase name}}PublicApi) => T): T {
+  return use{{pascalCase name}}Store((s: I{{pascalCase name}}State): T => selector(toPublicApi(s)))
+}
