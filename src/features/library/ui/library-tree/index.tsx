@@ -27,7 +27,11 @@ const selectMantineTree = createTreeSelector<TreeNodeData>(
   }),
 )
 
-export const LibraryTree: FC = () => {
+interface ILibraryTreeProps {
+  onTrackSelected: (track: ITrackRecord) => void
+}
+
+export const LibraryTree: FC<ILibraryTreeProps> = ({ onTrackSelected }) => {
   const tree = useTree()
   const data = useLibraryStore(selectMantineTree)
   const getAlbumsByArtistId = useLibraryStore((s) => s.getAlbumsByArtistId)
@@ -43,8 +47,7 @@ export const LibraryTree: FC = () => {
       tree.toggleExpanded(node.value)
       getTracksByAlbumId(node.value)
     } else if (type === 'track') {
-      // eslint-disable-next-line no-console
-      console.info(nodeData as ITrackRecord)
+      onTrackSelected(nodeData as ITrackRecord)
     }
   }
 

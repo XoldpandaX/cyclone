@@ -4,8 +4,10 @@ import type { IAudioEngine } from '@/shared/types/services/audio-engine.ts'
 import { AppDb } from '@/app/db'
 import { FsHandleRepository } from '@/app/repositories/fs-handle'
 import { LibraryRepository } from '@/app/repositories/library.ts'
+import { PlaylistRepository } from '@/app/repositories/playlist.ts'
 import { initCompatibility } from '@/features/compatibility'
 import { initLibrary } from '@/features/library'
+import { initPlaylist } from '@/features/playlist'
 import { initScanner } from '@/features/scanner'
 import { AudioEngine } from '@/shared/lib/services'
 
@@ -23,6 +25,7 @@ export const bootstrap = async (): Promise<IBootstrap> => {
 
   const libraryRepository = new LibraryRepository(db)
   const fsHandleRepository = new FsHandleRepository(db)
+  const playlistRepository = new PlaylistRepository(db)
 
   initCompatibility()
   await Promise.all([
@@ -31,6 +34,7 @@ export const bootstrap = async (): Promise<IBootstrap> => {
       fsHandleRepository,
     }),
     initLibrary({ libraryRepository }),
+    initPlaylist({ playlistRepository }),
   ])
 
   return {
