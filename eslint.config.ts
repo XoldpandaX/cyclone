@@ -17,11 +17,11 @@ export default antfu(
       'no-var': 'error',
       'react-hooks/exhaustive-deps': 'error',
       '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-      '@typescript-eslint/naming-convention': [
+      '@typescript-eslint/no-unused-vars': [
         'error',
-        { selector: 'interface', format: ['PascalCase'], prefix: ['I'] },
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
       ],
+      '@typescript-eslint/naming-convention': ['error', { selector: 'interface', format: ['PascalCase'], prefix: ['I'] }],
     },
   },
   {
